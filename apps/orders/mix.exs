@@ -37,6 +37,7 @@ defmodule Orders.MixProject do
   defp deps do
     [
       {:core, in_umbrella: true},
+      {:shared_components, in_umbrella: true},
       {:phoenix, "~> 1.7.21"},
       {:phoenix_html, "~> 4.1"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
