@@ -10,7 +10,7 @@ import Config
 
 config :core, Core.Repo,
   username: "karavellas",
-  password: "Yc23102002.",
+  password: "password",
   hostname: "localhost",
   database: "exelixis_dev",
   stacktrace: true,
