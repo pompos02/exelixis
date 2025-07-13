@@ -3,6 +3,7 @@ defmodule OrdersWeb.OrderIndexLive do
 
   alias Core.Orders
   alias Core.Repo
+  alias Core.PubSubTopics
 
   @impl true
   def mount(_params, _session, socket) do
@@ -12,7 +13,7 @@ defmodule OrdersWeb.OrderIndexLive do
     orders = Orders.list_orders() |> Repo.preload(:product)
 
     if connected?(socket) do
-      Phoenix.PubSub.subscribe(Core.PubSub, "orders")
+      Phoenix.PubSub.subscribe(Core.PubSub, PubSubTopics.orders_list())
     end
 
     {:ok,

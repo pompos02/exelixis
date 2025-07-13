@@ -66,11 +66,15 @@ defmodule Core.Orders do
 
   defp handle_order_creation_result({:ok, %{order: order, product_update: product}}) do
     # 6. If the transaction was successful, broadcast notifications!
-    Phoenix.PubSub.broadcast!(Core.PubSub, "orders", {:order_created, order})
+    Phoenix.PubSub.broadcast!(
+      Core.PubSub,
+      Core.PubSubTopics.orders_list(),
+      {:order_created, order}
+    )
 
     Phoenix.PubSub.broadcast!(
       Core.PubSub,
-      "products:" <> product.id,
+      Core.PubSubTopics.product(product.id),
       {:product_updated, product}
     )
 

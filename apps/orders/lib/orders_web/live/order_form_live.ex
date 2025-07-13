@@ -3,6 +3,7 @@ defmodule OrdersWeb.OrderFormLive do
   alias Core.Orders
   alias Core.Products
   alias Core.Order
+  alias Core.PubSubTopics
 
   @impl true
   def mount(_params, _session, socket) do
@@ -29,8 +30,14 @@ defmodule OrdersWeb.OrderFormLive do
   def handle_event("save", %{"order" => order_params}, socket) do
     case Orders.create_order(order_params) do
       {:ok, order} ->
-        # i will brodcust the order to its subs
-        Phoenix.PubSub.broadcast(Core.PubSub, "orders", {:order_created, order})
+        # i will brodcast the order to its subs
+        Phoenix.PubSub.broadcast(Core.PubSub, PubSubTopics.orders_list(), {:order_created, order})
+
+        Phoenix.PubSub.broadcast(
+          Core.PubSub,
+          PubSubTopics.orders_for_product(order.product_id),
+          {:order_created, order}
+        )
 
         {:noreply,
          socket
