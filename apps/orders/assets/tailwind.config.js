@@ -9,7 +9,8 @@ module.exports = {
   content: [
     "./js/**/*.js",
     "../lib/orders_web.ex",
-    "../lib/orders_web/**/*.*ex"
+    "../lib/orders_web/**/*.*ex",
+    "../../shared_components/lib/**/*.*ex"
   ],
   theme: {
     extend: {
