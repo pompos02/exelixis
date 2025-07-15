@@ -45,7 +45,6 @@
 import Config
 
 config :auth,
-  ecto_repos: [Auth.Repo],
   generators: [timestamp_type: :utc_datetime]
 
 # Configures the endpoint

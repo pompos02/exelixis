@@ -1,7 +1,7 @@
 defmodule AuthWeb.UserConfirmationLive do
   use AuthWeb, :live_view
 
-  alias Auth.Accounts
+  alias Core.Accounts
 
   def render(%{live_action: :edit} = assigns) do
     ~H"""

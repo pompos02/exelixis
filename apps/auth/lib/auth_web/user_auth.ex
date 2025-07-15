@@ -4,7 +4,7 @@ defmodule AuthWeb.UserAuth do
   import Plug.Conn
   import Phoenix.Controller
 
-  alias Auth.Accounts
+  alias Core.Accounts
 
   # Make the remember me cookie valid for 60 days.
   # If you want bump or reduce this value, also change

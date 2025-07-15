@@ -1,7 +1,7 @@
 defmodule AuthWeb.UserSettingsLive do
   use AuthWeb, :live_view
 
-  alias Auth.Accounts
+  alias Core.Accounts
 
   def render(assigns) do
     ~H"""

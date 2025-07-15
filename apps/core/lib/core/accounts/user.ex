@@ -1,13 +1,15 @@
-defmodule Auth.Accounts.User do
+defmodule Core.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @primary_key {:id, :binary_id, autogenerate: true}
+  @foreign_key_type :binary_id
   schema "users" do
-    field :email, :string
-    field :password, :string, virtual: true, redact: true
-    field :hashed_password, :string, redact: true
-    field :current_password, :string, virtual: true, redact: true
-    field :confirmed_at, :utc_datetime
+    field(:email, :string)
+    field(:password, :string, virtual: true, redact: true)
+    field(:hashed_password, :string, redact: true)
+    field(:current_password, :string, virtual: true, redact: true)
+    field(:confirmed_at, :utc_datetime)
 
     timestamps(type: :utc_datetime)
   end
@@ -81,7 +83,7 @@ defmodule Auth.Accounts.User do
   defp maybe_validate_unique_email(changeset, opts) do
     if Keyword.get(opts, :validate_email, true) do
       changeset
-      |> unsafe_validate_unique(:email, Auth.Repo)
+      |> unsafe_validate_unique(:email, Core.Repo)
       |> unique_constraint(:email)
     else
       changeset
@@ -136,7 +138,7 @@ defmodule Auth.Accounts.User do
   If there is no user or the user doesn't have a password, we call
   `Bcrypt.no_user_verify/0` to avoid timing attacks.
   """
-  def valid_password?(%Auth.Accounts.User{hashed_password: hashed_password}, password)
+  def valid_password?(%Core.Accounts.User{hashed_password: hashed_password}, password)
       when is_binary(hashed_password) and byte_size(password) > 0 do
     Bcrypt.verify_pass(password, hashed_password)
   end

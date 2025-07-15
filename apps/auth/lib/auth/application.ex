@@ -9,7 +9,6 @@ defmodule Auth.Application do
   def start(_type, _args) do
     children = [
       AuthWeb.Telemetry,
-      Auth.Repo,
       {DNSCluster, query: Application.get_env(:auth, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Auth.PubSub},
       # Start the Finch HTTP client for sending emails

@@ -36,6 +36,7 @@ defmodule Auth.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:core, in_umbrella: true},
       {:bcrypt_elixir, "~> 3.0"},
       {:phoenix, "~> 1.7.21"},
       {:phoenix_ecto, "~> 4.5"},
@@ -74,10 +75,8 @@ defmodule Auth.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get", "ecto.setup", "assets.setup", "assets.build"],
-      "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
-      "ecto.reset": ["ecto.drop", "ecto.setup"],
-      test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
+      setup: ["deps.get", "assets.setup", "assets.build"],
+      test: ["test"],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
       "assets.build": ["tailwind auth", "esbuild auth"],
       "assets.deploy": [

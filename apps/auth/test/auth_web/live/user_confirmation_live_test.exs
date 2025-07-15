@@ -2,7 +2,7 @@ defmodule AuthWeb.UserConfirmationLiveTest do
   use AuthWeb.ConnCase, async: true
 
   import Phoenix.LiveViewTest
-  import Auth.AccountsFixtures
+  import Core.AccountsFixtures
 
   alias Auth.Accounts
   alias Auth.Repo

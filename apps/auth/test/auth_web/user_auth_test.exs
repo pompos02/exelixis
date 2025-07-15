@@ -4,7 +4,7 @@ defmodule AuthWeb.UserAuthTest do
   alias Phoenix.LiveView
   alias Auth.Accounts
   alias AuthWeb.UserAuth
-  import Auth.AccountsFixtures
+  import Core.AccountsFixtures
 
   @remember_me_cookie "_auth_web_user_remember_me"
 

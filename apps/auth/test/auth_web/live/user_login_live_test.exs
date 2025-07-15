@@ -2,7 +2,7 @@ defmodule AuthWeb.UserLoginLiveTest do
   use AuthWeb.ConnCase, async: true
 
   import Phoenix.LiveViewTest
-  import Auth.AccountsFixtures
+  import Core.AccountsFixtures
 
   describe "Log in page" do
     test "renders log in page", %{conn: conn} do

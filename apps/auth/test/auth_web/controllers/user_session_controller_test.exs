@@ -1,7 +1,7 @@
 defmodule AuthWeb.UserSessionControllerTest do
   use AuthWeb.ConnCase, async: true
 
-  import Auth.AccountsFixtures
+  import Core.AccountsFixtures
 
   setup do
     %{user: user_fixture()}

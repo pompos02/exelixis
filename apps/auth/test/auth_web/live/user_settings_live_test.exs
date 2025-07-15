@@ -3,7 +3,7 @@ defmodule AuthWeb.UserSettingsLiveTest do
 
   alias Auth.Accounts
   import Phoenix.LiveViewTest
-  import Auth.AccountsFixtures
+  import Core.AccountsFixtures
 
   describe "Settings page" do
     test "renders settings page", %{conn: conn} do

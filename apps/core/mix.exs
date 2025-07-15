@@ -29,6 +29,8 @@ defmodule Core.MixProject do
       # {:core, in_umbrella: true},
       # {:inventory, in_umbrella: true},
       # {:orders, in_umbrella: true},
+      {:bcrypt_elixir, "~> 3.0"},
+      {:swoosh, "~> 1.5"},
       {:ecto_sql, "~> 3.10"},
       {:postgrex, ">= 0.0.0"},
       # Required for Ecto integration

@@ -2,7 +2,7 @@ defmodule AuthWeb.UserRegistrationLiveTest do
   use AuthWeb.ConnCase, async: true
 
   import Phoenix.LiveViewTest
-  import Auth.AccountsFixtures
+  import Core.AccountsFixtures
 
   describe "Registration page" do
     test "renders registration page", %{conn: conn} do

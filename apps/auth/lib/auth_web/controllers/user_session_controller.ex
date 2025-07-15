@@ -1,7 +1,7 @@
 defmodule AuthWeb.UserSessionController do
   use AuthWeb, :controller
 
-  alias Auth.Accounts
+  alias Core.Accounts
   alias AuthWeb.UserAuth
 
   def create(conn, %{"_action" => "registered"} = params) do

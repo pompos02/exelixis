@@ -1,14 +1,6 @@
 import Config
 
-# Configure your database
-config :auth, Auth.Repo,
-  username: "karavellas",
-  password: "password",
-  hostname: "localhost",
-  database: "exelixis_dev",
-  stacktrace: true,
-  show_sensitive_data_on_connection_error: true,
-  pool_size: 10
+# Auth app no longer manages its own database - uses Core.Repo
 
 # For development, we disable any cache and enable
 # debugging and code reloading.
@@ -21,7 +13,11 @@ config :auth, AuthWeb.Endpoint,
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
   http: [ip: {127, 0, 0, 1}, port: 4003],
   url: [scheme: "http", host: "auth.localhost", port: 8000],
-  check_origin: ["http://inventory.localhost:8000", "http://orders.localhost:8000", "http://auth.localhost:8000"],
+  check_origin: [
+    "http://inventory.localhost:8000",
+    "http://orders.localhost:8000",
+    "http://auth.localhost:8000"
+  ],
   code_reloader: true,
   debug_errors: true,
   secret_key_base: "tUS/5irgVLa6bMOkdnZDlgzKicjcRWONJKuJcwYYKJy9T1mTHBmcImiRnpVh429O",
@@ -99,7 +95,11 @@ config :orders, OrdersWeb.Endpoint,
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
   http: [ip: {127, 0, 0, 1}, port: 4000],
   url: [scheme: "http", host: "orders.localhost", port: 8000],
-  check_origin: ["http://inventory.localhost:8000", "http://orders.localhost:8000", "http://auth.localhost:8000"],
+  check_origin: [
+    "http://inventory.localhost:8000",
+    "http://orders.localhost:8000",
+    "http://auth.localhost:8000"
+  ],
   # check_origin: false,
   code_reloader: true,
   debug_errors: true,
@@ -150,7 +150,11 @@ config :inventory, InventoryWeb.Endpoint,
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
   http: [ip: {127, 0, 0, 1}, port: 4001],
   url: [scheme: "http", host: "inventory.localhost", port: 8000],
-  check_origin: ["http://inventory.localhost:8000", "http://orders.localhost:8000", "http://auth.localhost:8000"],
+  check_origin: [
+    "http://inventory.localhost:8000",
+    "http://orders.localhost:8000",
+    "http://auth.localhost:8000"
+  ],
   # check_origin: false,
   code_reloader: true,
   debug_errors: true,
