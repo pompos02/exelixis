@@ -49,30 +49,30 @@ defmodule OrdersWeb.OrderFormLive do
     end
   end
 
-  @impl true
-  def render(assigns) do
-    ~H"""
-    <.header>
-      Create a New Order
-      <:subtitle>Select a product and enter the customer details.</:subtitle>
-    </.header>
-    <div>
-      <.form for={@form} id="order-form" phx-change="validate" phx-submit="save" class="space-y-4">
-        <.input field={@form[:customer_name]} type="text" label="Customer Name" required />
-        <.input field={@form[:product_quantity]} type="number" label="Product Quantity" required />
-        <.input
-          type="select"
-          field={@form[:product_id]}
-          label="Product"
-          prompt="Please select a product"
-          options={Enum.map(@products, &{&1.name, &1.id})}
-          required
-        />
-        <div class="mt-4">
-          <.button phx-disable-with="Saving...">Create Order</.button>
-        </div>
-      </.form>
-    </div>
-    """
-  end
+  # @impl true
+  # def render(assigns) do
+  #   ~H"""
+  #   <.header>
+  #     Create a New Order
+  #     <:subtitle>Select a product and enter the customer details.</:subtitle>
+  #   </.header>
+  #   <div>
+  #     <.form for={@form} id="order-form" phx-change="validate" phx-submit="save" class="space-y-4">
+  #       <.input field={@form[:customer_name]} type="text" label="Customer Name" required />
+  #       <.input field={@form[:product_quantity]} type="number" label="Product Quantity" required />
+  #       <.input
+  #         type="select"
+  #         field={@form[:product_id]}
+  #         label="Product"
+  #         prompt="Please select a product"
+  #         options={Enum.map(@products, &{&1.name, &1.id})}
+  #         required
+  #       />
+  #       <div class="mt-4">
+  #         <.button phx-disable-with="Saving...">Create Order</.button>
+  #       </div>
+  #     </.form>
+  #   </div>
+  #   """
+  # end
 end

@@ -61,7 +61,7 @@ config :inventory, InventoryWeb.Endpoint,
     formats: [html: InventoryWeb.ErrorHTML, json: InventoryWeb.ErrorJSON],
     layout: false
   ],
-  pubsub_server: Inventory.PubSub,
+  pubsub_server: Core.PubSub,
   live_view: [signing_salt: "37IwnetX"]
 
 # Configures the mailer

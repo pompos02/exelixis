@@ -10,7 +10,7 @@ defmodule Inventory.Application do
     children = [
       InventoryWeb.Telemetry,
       {DNSCluster, query: Application.get_env(:inventory, :dns_cluster_query) || :ignore},
-      {Phoenix.PubSub, name: Inventory.PubSub},
+      # {Phoenix.PubSub, name: Inventory.PubSub},
       # Start the Finch HTTP client for sending emails
       {Finch, name: Inventory.Finch},
       # Start a worker by calling: Inventory.Worker.start_link(arg)
