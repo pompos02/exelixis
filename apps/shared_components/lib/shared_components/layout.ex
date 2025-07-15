@@ -9,14 +9,14 @@ defmodule SharedComponents.Layout do
       <h2 class="font-bold text-lg mb-4">EUKO PSIXOPATHIS </h2>
 
       <.link
-        href="http://localhost:4001/"
+        href="http://inventory.localhost:8000/"
         class={"text-sm font-semibold leading-6 rounded-md p-2 #{if @current_path == "/", do: "bg-slate-200 text-slate-900", else: "text-slate-700 hover:bg-slate-200"}"}
       >
         Inventory
       </.link>
 
       <.link
-        href="http://localhost:4000/"
+        href="http://orders.localhost:8000"
         class={"text-sm font-semibold leading-6 rounded-md p-2 #{if @current_path == "/", do: "bg-slate-200 text-slate-900", else: "text-slate-700 hover:bg-slate-200"}"}
       >
         Orders

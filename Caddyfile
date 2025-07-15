@@ -1,0 +1,21 @@
+# Caddyfile for Subdomain Routing
+
+# Use a wildcard for the port to handle all our subdomains
+:8000 {
+    # Route requests for inventory.localhost to the inventory app
+    @inventory host inventory.localhost
+    handle @inventory {
+        reverse_proxy 127.0.0.1:4001
+    }
+
+    # Route requests for orders.localhost to the orders app
+    @orders host orders.localhost
+    handle @orders {
+        reverse_proxy 127.0.0.1:4000
+    }
+
+    # Optional: Add a default fallback or a root domain handler
+    # handle {
+    #   respond "Not Found" 404
+    # }
+}

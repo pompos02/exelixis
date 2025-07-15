@@ -21,7 +21,9 @@ config :orders, OrdersWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
   http: [ip: {127, 0, 0, 1}, port: 4000],
-  check_origin: false,
+  url: [scheme: "http", host: "orders.localhost", port: 8000],
+  check_origin: ["http://inventory.localhost:8000", "http://orders.localhost:8000"],
+  # check_origin: false,
   code_reloader: true,
   debug_errors: true,
   secret_key_base: "4VNIrEFfqWLd+h0oTfjJ5E0sIK4/BldiG8s2ydK2rrcqPRRNOT9vxZ8ruGTuJlrN",
@@ -70,7 +72,9 @@ config :inventory, InventoryWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
   http: [ip: {127, 0, 0, 1}, port: 4001],
-  check_origin: false,
+  url: [scheme: "http", host: "inventory.localhost", port: 8000],
+  check_origin: ["http://inventory.localhost:8000", "http://orders.localhost:8000"],
+  # check_origin: false,
   code_reloader: true,
   debug_errors: true,
   secret_key_base: "tL1jHC6Guy1ah4HMLxzAfj28HYSQgA7K4uOfdbube6F52Rr5sjocVyasqVcGIkQP",
