@@ -14,6 +14,12 @@
         reverse_proxy 127.0.0.1:4000
     }
 
+    # Route requests for auth.localhost to the auth app
+    @auth host auth.localhost
+    handle @auth {
+        reverse_proxy 127.0.0.1:4003
+    }
+
     # Optional: Add a default fallback or a root domain handler
     # handle {
     #   respond "Not Found" 404
