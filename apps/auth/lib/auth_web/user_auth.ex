@@ -93,7 +93,13 @@ defmodule AuthWeb.UserAuth do
   def fetch_current_user(conn, _opts) do
     {user_token, conn} = ensure_user_token(conn)
     user = user_token && Accounts.get_user_by_session_token(user_token)
-    assign(conn, :current_user, user)
+    
+    conn =
+      conn
+      |> assign(:current_user, user)
+      |> assign(:current_tenant, user && user.tenant_id)
+    
+    conn
   end
 
   defp ensure_user_token(conn) do
@@ -175,9 +181,16 @@ defmodule AuthWeb.UserAuth do
   end
 
   defp mount_current_user(socket, session) do
-    Phoenix.Component.assign_new(socket, :current_user, fn ->
-      if user_token = session["user_token"] do
-        Accounts.get_user_by_session_token(user_token)
+    socket =
+      Phoenix.Component.assign_new(socket, :current_user, fn ->
+        if user_token = session["user_token"] do
+          Accounts.get_user_by_session_token(user_token)
+        end
+      end)
+    
+    Phoenix.Component.assign_new(socket, :current_tenant, fn ->
+      if socket.assigns.current_user do
+        socket.assigns.current_user.tenant_id
       end
     end)
   end

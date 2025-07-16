@@ -10,7 +10,6 @@ defmodule Core.Accounts.User do
     field(:password, :string, virtual: true, redact: true)
     field(:hashed_password, :string, redact: true)
     field(:current_password, :string, virtual: true, redact: true)
-    field(:confirmed_at, :utc_datetime)
 
     timestamps(type: :utc_datetime)
 
@@ -52,9 +51,12 @@ defmodule Core.Accounts.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password])
+    |> cast(attrs, [:name, :email, :password, :tenant_id])
+    |> validate_required([:name, :email, :password, :tenant_id])
+    |> validate_name(opts)
     |> validate_email(opts)
     |> validate_password(opts)
+    |> foreign_key_constraint(:tenant_id)
   end
 
   defp validate_email(changeset, opts) do
@@ -93,6 +95,25 @@ defmodule Core.Accounts.User do
     end
   end
 
+  defp validate_name(changeset, opts) do
+    changeset
+    |> validate_length(:name, min: 2, max: 100)
+    |> validate_format(:name, ~r/^[a-zA-Z0-9_\s]+$/,
+      message: "must contain only letters, numbers, underscores, and spaces"
+    )
+    |> maybe_validate_unique_name(opts)
+  end
+
+  defp maybe_validate_unique_name(changeset, opts) do
+    if Keyword.get(opts, :validate_name, true) do
+      changeset
+      |> unsafe_validate_unique(:name, Core.Repo)
+      |> unique_constraint(:name)
+    else
+      changeset
+    end
+  end
+
   defp maybe_validate_unique_email(changeset, opts) do
     if Keyword.get(opts, :validate_email, true) do
       changeset
@@ -103,20 +124,6 @@ defmodule Core.Accounts.User do
     end
   end
 
-  @doc """
-  A user changeset for changing the email.
-
-  It requires the email to change otherwise an error is added.
-  """
-  def email_changeset(user, attrs, opts \\ []) do
-    user
-    |> cast(attrs, [:email])
-    |> validate_email(opts)
-    |> case do
-      %{changes: %{email: _}} = changeset -> changeset
-      %{} = changeset -> add_error(changeset, :email, "did not change")
-    end
-  end
 
   @doc """
   A user changeset for changing the password.
@@ -135,14 +142,6 @@ defmodule Core.Accounts.User do
     |> cast(attrs, [:password])
     |> validate_confirmation(:password, message: "does not match password")
     |> validate_password(opts)
-  end
-
-  @doc """
-  Confirms the account by setting `confirmed_at`.
-  """
-  def confirm_changeset(user) do
-    now = DateTime.utc_now() |> DateTime.truncate(:second)
-    change(user, confirmed_at: now)
   end
 
   @doc """

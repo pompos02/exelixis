@@ -6,7 +6,7 @@ defmodule Core.Accounts do
   import Ecto.Query, warn: false
   alias Core.Repo
 
-  alias Core.Accounts.{User, UserToken, UserNotifier}
+  alias Core.Accounts.{User, UserToken, Tenant}
 
   ## Database getters
 
@@ -49,6 +49,24 @@ defmodule Core.Accounts do
   end
 
   @doc """
+  Gets a user by name and password.
+
+  ## Examples
+
+      iex> get_user_by_name_and_password("testuser", "correct_password")
+      %User{}
+
+      iex> get_user_by_name_and_password("testuser", "invalid_password")
+      nil
+
+  """
+  def get_user_by_name_and_password(name, password)
+      when is_binary(name) and is_binary(password) do
+    user = Repo.get_by(User, name: name)
+    if User.valid_password?(user, password), do: user
+  end
+
+  @doc """
   Gets a single user.
 
   Raises `Ecto.NoResultsError` if the User does not exist.
@@ -63,6 +81,55 @@ defmodule Core.Accounts do
 
   """
   def get_user!(id), do: Repo.get!(User, id)
+
+  ## Tenant management
+
+  @doc """
+  Returns the list of tenants.
+
+  ## Examples
+
+      iex> list_tenants()
+      [%Tenant{}, ...]
+
+  """
+  def list_tenants do
+    Repo.all(Tenant)
+  end
+
+  @doc """
+  Gets a single tenant.
+
+  Raises `Ecto.NoResultsError` if the Tenant does not exist.
+
+  ## Examples
+
+      iex> get_tenant!(123)
+      %Tenant{}
+
+      iex> get_tenant!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_tenant!(id), do: Repo.get!(Tenant, id)
+
+  @doc """
+  Creates a tenant.
+
+  ## Examples
+
+      iex> create_tenant(%{name: "Test Tenant"})
+      {:ok, %Tenant{}}
+
+      iex> create_tenant(%{name: ""})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_tenant(attrs \\ %{}) do
+    %Tenant{}
+    |> Tenant.changeset(attrs)
+    |> Repo.insert()
+  end
 
   ## User registration
 
@@ -94,99 +161,10 @@ defmodule Core.Accounts do
 
   """
   def change_user_registration(%User{} = user, attrs \\ %{}) do
-    User.registration_changeset(user, attrs, hash_password: false, validate_email: false)
+    User.registration_changeset(user, attrs, hash_password: false, validate_email: false, validate_name: false)
   end
 
   ## Settings
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for changing the user email.
-
-  ## Examples
-
-      iex> change_user_email(user)
-      %Ecto.Changeset{data: %User{}}
-
-  """
-  def change_user_email(user, attrs \\ %{}) do
-    User.email_changeset(user, attrs, validate_email: false)
-  end
-
-  @doc """
-  Emulates that the email will change without actually changing
-  it in the database.
-
-  ## Examples
-
-      iex> apply_user_email(user, "valid password", %{email: ...})
-      {:ok, %User{}}
-
-      iex> apply_user_email(user, "invalid password", %{email: ...})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def apply_user_email(user, password, attrs) do
-    user
-    |> User.email_changeset(attrs)
-    |> User.validate_current_password(password)
-    |> Ecto.Changeset.apply_action(:update)
-  end
-
-  @doc """
-  Updates the user email using the given token.
-
-  If the token matches, the user email is updated and the token is deleted.
-  The confirmed_at date is also updated to the current time.
-  """
-  def update_user_email(user, token) do
-    context = "change:#{user.email}"
-
-    with {:ok, query} <- UserToken.verify_change_email_token_query(token, context),
-         %UserToken{sent_to: email} <- Repo.one(query),
-         {:ok, _} <- Repo.transaction(user_email_multi(user, email, context)) do
-      :ok
-    else
-      _ -> :error
-    end
-  end
-
-  defp user_email_multi(user, email, context) do
-    changeset =
-      user
-      |> User.email_changeset(%{email: email})
-      |> User.confirm_changeset()
-
-    Ecto.Multi.new()
-    |> Ecto.Multi.update(:user, changeset)
-    |> Ecto.Multi.delete_all(:tokens, UserToken.by_user_and_contexts_query(user, [context]))
-  end
-
-  @doc ~S"""
-  Delivers the update email instructions to the given user.
-
-  ## Examples
-
-      iex> deliver_user_update_email_instructions(user, current_email, &url(~p"/users/settings/confirm_email/#{&1}"))
-      {:ok, %{to: ..., body: ...}}
-
-  """
-  def deliver_user_update_email_instructions(
-        %User{} = user,
-        current_email,
-        update_email_url_fun,
-        mailer_module \\ Auth.Mailer
-      )
-      when is_function(update_email_url_fun, 1) do
-    {encoded_token, user_token} = UserToken.build_email_token(user, "change:#{current_email}")
-
-    Repo.insert!(user_token)
-
-    UserNotifier.deliver_update_email_instructions(
-      user,
-      update_email_url_fun.(encoded_token),
-      mailer_module
-    )
-  end
 
   @doc """
   Returns an `%Ecto.Changeset{}` for changing the user password.
@@ -256,130 +234,4 @@ defmodule Core.Accounts do
     :ok
   end
 
-  ## Confirmation
-
-  @doc ~S"""
-  Delivers the confirmation email instructions to the given user.
-
-  ## Examples
-
-      iex> deliver_user_confirmation_instructions(user, &url(~p"/users/confirm/#{&1}"))
-      {:ok, %{to: ..., body: ...}}
-
-      iex> deliver_user_confirmation_instructions(confirmed_user, &url(~p"/users/confirm/#{&1}"))
-      {:error, :already_confirmed}
-
-  """
-  def deliver_user_confirmation_instructions(
-        %User{} = user,
-        confirmation_url_fun,
-        mailer_module \\ Auth.Mailer
-      )
-      when is_function(confirmation_url_fun, 1) do
-    if user.confirmed_at do
-      {:error, :already_confirmed}
-    else
-      {encoded_token, user_token} = UserToken.build_email_token(user, "confirm")
-      Repo.insert!(user_token)
-
-      UserNotifier.deliver_confirmation_instructions(
-        user,
-        confirmation_url_fun.(encoded_token),
-        mailer_module
-      )
-    end
-  end
-
-  @doc """
-  Confirms a user by the given token.
-
-  If the token matches, the user account is marked as confirmed
-  and the token is deleted.
-  """
-  def confirm_user(token) do
-    with {:ok, query} <- UserToken.verify_email_token_query(token, "confirm"),
-         %User{} = user <- Repo.one(query),
-         {:ok, %{user: user}} <- Repo.transaction(confirm_user_multi(user)) do
-      {:ok, user}
-    else
-      _ -> :error
-    end
-  end
-
-  defp confirm_user_multi(user) do
-    Ecto.Multi.new()
-    |> Ecto.Multi.update(:user, User.confirm_changeset(user))
-    |> Ecto.Multi.delete_all(:tokens, UserToken.by_user_and_contexts_query(user, ["confirm"]))
-  end
-
-  ## Reset password
-
-  @doc ~S"""
-  Delivers the reset password email to the given user.
-
-  ## Examples
-
-      iex> deliver_user_reset_password_instructions(user, &url(~p"/users/reset_password/#{&1}"))
-      {:ok, %{to: ..., body: ...}}
-
-  """
-  def deliver_user_reset_password_instructions(
-        %User{} = user,
-        reset_password_url_fun,
-        mailer_module \\ Auth.Mailer
-      )
-      when is_function(reset_password_url_fun, 1) do
-    {encoded_token, user_token} = UserToken.build_email_token(user, "reset_password")
-    Repo.insert!(user_token)
-
-    UserNotifier.deliver_reset_password_instructions(
-      user,
-      reset_password_url_fun.(encoded_token),
-      mailer_module
-    )
-  end
-
-  @doc """
-  Gets the user by reset password token.
-
-  ## Examples
-
-      iex> get_user_by_reset_password_token("validtoken")
-      %User{}
-
-      iex> get_user_by_reset_password_token("invalidtoken")
-      nil
-
-  """
-  def get_user_by_reset_password_token(token) do
-    with {:ok, query} <- UserToken.verify_email_token_query(token, "reset_password"),
-         %User{} = user <- Repo.one(query) do
-      user
-    else
-      _ -> nil
-    end
-  end
-
-  @doc """
-  Resets the user password.
-
-  ## Examples
-
-      iex> reset_user_password(user, %{password: "new long password", password_confirmation: "new long password"})
-      {:ok, %User{}}
-
-      iex> reset_user_password(user, %{password: "valid", password_confirmation: "not the same"})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def reset_user_password(user, attrs) do
-    Ecto.Multi.new()
-    |> Ecto.Multi.update(:user, User.password_changeset(user, attrs))
-    |> Ecto.Multi.delete_all(:tokens, UserToken.by_user_and_contexts_query(user, :all))
-    |> Repo.transaction()
-    |> case do
-      {:ok, %{user: user}} -> {:ok, user}
-      {:error, :user, changeset, _} -> {:error, changeset}
-    end
-  end
 end
