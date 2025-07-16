@@ -1,23 +1,38 @@
-# Caddyfile for Subdomain Routing
+# Caddyfile for Subdomain Routing with WebSocket Support
 
 # Use a wildcard for the port to handle all our subdomains
 :8000 {
     # Route requests for inventory.localhost to the inventory app
     @inventory host inventory.localhost
     handle @inventory {
-        reverse_proxy 127.0.0.1:4001
+        reverse_proxy 127.0.0.1:4001 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+        }
     }
 
     # Route requests for orders.localhost to the orders app
     @orders host orders.localhost
     handle @orders {
-        reverse_proxy 127.0.0.1:4000
+        reverse_proxy 127.0.0.1:4000 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+        }
     }
 
     # Route requests for auth.localhost to the auth app
     @auth host auth.localhost
     handle @auth {
-        reverse_proxy 127.0.0.1:4003
+        reverse_proxy 127.0.0.1:4003 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+        }
     }
 
     # Optional: Add a default fallback or a root domain handler

@@ -8,6 +8,9 @@ import Config
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we can use it
 # to bundle .js and .css sources.
+# Shared secret_key_base for session sharing across all apps
+shared_secret_key_base = "tUS/5irgVLa6bMOkdnZDlgzKicjcRWONJKuJcwYYKJy9T1mTHBmcImiRnpVh429O"
+
 config :auth, AuthWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
@@ -20,7 +23,7 @@ config :auth, AuthWeb.Endpoint,
   ],
   code_reloader: true,
   debug_errors: true,
-  secret_key_base: "tUS/5irgVLa6bMOkdnZDlgzKicjcRWONJKuJcwYYKJy9T1mTHBmcImiRnpVh429O",
+  secret_key_base: shared_secret_key_base,
   watchers: [
     esbuild: {Esbuild, :install_and_run, [:auth, ~w(--sourcemap=inline --watch)]},
     tailwind: {Tailwind, :install_and_run, [:auth, ~w(--watch)]}
@@ -103,7 +106,7 @@ config :orders, OrdersWeb.Endpoint,
   # check_origin: false,
   code_reloader: true,
   debug_errors: true,
-  secret_key_base: "4VNIrEFfqWLd+h0oTfjJ5E0sIK4/BldiG8s2ydK2rrcqPRRNOT9vxZ8ruGTuJlrN",
+  secret_key_base: shared_secret_key_base,
   watchers: [
     esbuild: {Esbuild, :install_and_run, [:orders, ~w(--sourcemap=inline --watch)]},
     tailwind: {Tailwind, :install_and_run, [:orders, ~w(--watch)]}
@@ -158,7 +161,7 @@ config :inventory, InventoryWeb.Endpoint,
   # check_origin: false,
   code_reloader: true,
   debug_errors: true,
-  secret_key_base: "tL1jHC6Guy1ah4HMLxzAfj28HYSQgA7K4uOfdbube6F52Rr5sjocVyasqVcGIkQP",
+  secret_key_base: shared_secret_key_base,
   watchers: [
     esbuild: {Esbuild, :install_and_run, [:inventory, ~w(--sourcemap=inline --watch)]},
     tailwind: {Tailwind, :install_and_run, [:inventory, ~w(--watch)]}

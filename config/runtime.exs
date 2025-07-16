@@ -7,6 +7,12 @@ import Config
 # any compile-time configuration in here, as it won't be applied.
 # The block below contains prod specific runtime configuration.
 
+# Configure session domain for production environment
+if config_env() == :prod do
+  domain = System.get_env("DOMAIN") || "localhost"
+  System.put_env("SESSION_DOMAIN", "#{domain}")  # No leading dot as per modern browser specs
+end
+
 # ## Using releases
 #
 # If you use `mix release`, you need to explicitly enable the server
