@@ -6,12 +6,25 @@ defmodule Core.Accounts.User do
   @foreign_key_type :binary_id
   schema "users" do
     field(:email, :string)
+    field(:name, :string)
     field(:password, :string, virtual: true, redact: true)
     field(:hashed_password, :string, redact: true)
     field(:current_password, :string, virtual: true, redact: true)
     field(:confirmed_at, :utc_datetime)
 
     timestamps(type: :utc_datetime)
+
+    belongs_to(:tenant, Core.Accounts.Tenant)
+    has_many(:tokens, Core.Accounts.UserToken)
+  end
+
+  def changeset(user, attrs) do
+    user
+    |> cast(attrs, [:name, :email, :hashed_password, :tenant_id])
+    |> validate_required([:name, :email, :hashed_password, :tenant_id])
+    |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/, message: "must have the @ sign and no spaces")
+    |> unique_constraint(:name)
+    |> unique_constraint(:email)
   end
 
   @doc """
@@ -55,7 +68,7 @@ defmodule Core.Accounts.User do
   defp validate_password(changeset, opts) do
     changeset
     |> validate_required([:password])
-    |> validate_length(:password, min: 12, max: 72)
+    |> validate_length(:password, min: 8, max: 72)
     # Examples of additional password validation:
     # |> validate_format(:password, ~r/[a-z]/, message: "at least one lower case character")
     # |> validate_format(:password, ~r/[A-Z]/, message: "at least one upper case character")
