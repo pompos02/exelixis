@@ -6,7 +6,7 @@ defmodule Core.Accounts.UserToken do
   @hash_algorithm :sha256
   @rand_size 32
 
-  @session_validity_in_days 60
+  @session_validity_in_hours 1
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -55,7 +55,7 @@ defmodule Core.Accounts.UserToken do
     query =
       from(token in by_token_and_context_query(token, "session"),
         join: user in assoc(token, :user),
-        where: token.inserted_at > ago(@session_validity_in_days, "day"),
+        where: token.inserted_at > ago(@session_validity_in_hours, "hour"),
         select: user
       )
 
