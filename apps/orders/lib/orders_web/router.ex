@@ -1,5 +1,6 @@
 defmodule OrdersWeb.Router do
   use OrdersWeb, :router
+
   import AuthWeb.UserAuth
 
   pipeline :browser do
@@ -19,9 +20,11 @@ defmodule OrdersWeb.Router do
   scope "/", OrdersWeb do
     pipe_through :browser
 
-    live "/", PageLive, :home
-    live "/orders", OrderIndexLive, :index
-    live "/orders/new", OrderFormLive, :new
+    live_session :default, on_mount: [{AuthWeb.UserAuth, :mount_current_user}] do
+      live "/", PageLive, :home
+      live "/orders", OrderIndexLive, :index
+      live "/orders/new", OrderFormLive, :new
+    end
   end
 
   # Other scopes may use custom stacks.

@@ -16,10 +16,10 @@ defmodule SharedComponents.Layout do
         <div class="flex-1">
           <nav class="grid items-start gap-2 p-2 text-sm font-medium lg:px-4">
             <span class="px-2 py-2 text-xs font-semibold text-muted-foreground">Plugins</span>
-            <.link href="http://inventory.localhost:8000" class="..." >
+            <.link href="http://inventory.exelixis.local:8000" class="..." >
               Inventory
             </.link>
-            <.link href="http://orders.localhost:8000" class="..." >
+            <.link href="http://orders.exelixis.local:8000" class="..." >
               Orders
             </.link>
           </nav>
@@ -30,15 +30,15 @@ defmodule SharedComponents.Layout do
             <div class="font-semibold"><%= @current_user.name %></div>
             <div class="text-xs text-muted-foreground"><%= @current_user.email %></div>
             <div class="mt-2 flex flex-col gap-1 text-xs">
-              <.link href="http://auth.localhost:8000/users/settings" class="hover:underline">
+              <.link href="http://auth.exelixis.local:8000/users/settings" class="hover:underline">
                 Settings
               </.link>
-              <.link href="http://auth.localhost:8000/users/log_out" method="delete" class="text-red-500 hover:underline">
+              <.link href="http://auth.exelixis.local:8000/users/log_out" method="delete" class="text-red-500 hover:underline">
                 Log out
               </.link>
             </div>
           <% else %>
-            <.link href="http://auth.localhost:8000/users/log_in" class="text-sm font-semibold">
+            <.link href="http://auth.exelixis.local:8000/users/log_in" class="text-sm font-semibold">
               Log in / Register
             </.link>
           <% end %>

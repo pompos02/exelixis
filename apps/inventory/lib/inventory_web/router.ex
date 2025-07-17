@@ -20,7 +20,9 @@ defmodule InventoryWeb.Router do
   scope "/", InventoryWeb do
     pipe_through :browser
 
-    live "/", ProductIndexLive, :home
+    live_session :default, on_mount: [{AuthWeb.UserAuth, :mount_current_user}] do
+      live "/", ProductIndexLive, :home
+    end
   end
 
   # Other scopes may use custom stacks.

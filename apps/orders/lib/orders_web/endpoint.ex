@@ -54,8 +54,8 @@ defmodule OrdersWeb.Endpoint do
 
   def session_opts() do
     # Set domain to top-level domain for subdomain cookie sharing
-    # The key insight: use the top-level domain (localhost) so cookies work across subdomains
-    # domain = "localhost"
-    Keyword.put(@session_options, :domain, OrdersWeb.Endpoint.host())
+    # CRITICAL: Must use leading dot for subdomain sharing!
+    domain = ".exelixis.local"
+    Keyword.put(@session_options, :domain, domain)
   end
 end

@@ -2,8 +2,8 @@
 
 # Use a wildcard for the port to handle all our subdomains
 :8000 {
-    # Route requests for inventory.localhost to the inventory app
-    @inventory host inventory.localhost
+    # Route requests for inventory.exelixis.local to the inventory app
+    @inventory host inventory.exelixis.local
     handle @inventory {
         reverse_proxy 127.0.0.1:4001 {
             header_up Host {host}
@@ -13,8 +13,8 @@
         }
     }
 
-    # Route requests for orders.localhost to the orders app
-    @orders host orders.localhost
+    # Route requests for orders.exelixis.local to the orders app
+    @orders host orders.exelixis.local
     handle @orders {
         reverse_proxy 127.0.0.1:4000 {
             header_up Host {host}
@@ -24,8 +24,8 @@
         }
     }
 
-    # Route requests for auth.localhost to the auth app
-    @auth host auth.localhost
+    # Route requests for auth.exelixis.local to the auth app
+    @auth host auth.exelixis.local
     handle @auth {
         reverse_proxy 127.0.0.1:4003 {
             header_up Host {host}

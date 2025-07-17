@@ -15,11 +15,11 @@ config :auth, AuthWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
   http: [ip: {127, 0, 0, 1}, port: 4003],
-  url: [scheme: "http", host: "auth.localhost", port: 8000],
+  url: [scheme: "http", host: "auth.exelixis.local", port: 8000],
   check_origin: [
-    "http://inventory.localhost:8000",
-    "http://orders.localhost:8000",
-    "http://auth.localhost:8000"
+    "http://inventory.exelixis.local:8000",
+    "http://orders.exelixis.local:8000",
+    "http://auth.exelixis.local:8000"
   ],
   code_reloader: true,
   debug_errors: true,
@@ -97,11 +97,11 @@ config :orders, OrdersWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
   http: [ip: {127, 0, 0, 1}, port: 4000],
-  url: [scheme: "http", host: "orders.localhost", port: 8000],
+  url: [scheme: "http", host: "orders.exelixis.local", port: 8000],
   check_origin: [
-    "http://inventory.localhost:8000",
-    "http://orders.localhost:8000",
-    "http://auth.localhost:8000"
+    "http://inventory.exelixis.local:8000",
+    "http://orders.exelixis.local:8000",
+    "http://auth.exelixis.local:8000"
   ],
   # check_origin: false,
   code_reloader: true,
@@ -152,11 +152,11 @@ config :inventory, InventoryWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
   http: [ip: {127, 0, 0, 1}, port: 4001],
-  url: [scheme: "http", host: "inventory.localhost", port: 8000],
+  url: [scheme: "http", host: "inventory.exelixis.local", port: 8000],
   check_origin: [
-    "http://inventory.localhost:8000",
-    "http://orders.localhost:8000",
-    "http://auth.localhost:8000"
+    "http://inventory.exelixis.local:8000",
+    "http://orders.exelixis.local:8000",
+    "http://auth.exelixis.local:8000"
   ],
   # check_origin: false,
   code_reloader: true,

@@ -55,10 +55,10 @@ defmodule AuthWeb.Endpoint do
   end
 
   def session_opts() do
-    # Extract top-level domain from host for subdomain cookie sharing
-    host = AuthWeb.Endpoint.host()
-    # domain = extract_top_level_domain(host)
-    Keyword.put(@session_options, :domain, AuthWeb.Endpoint.host())
+    # Set domain to top-level domain for subdomain cookie sharing
+    # CRITICAL: Must use leading dot for subdomain sharing!
+    domain = ".exelixis.local"
+    Keyword.put(@session_options, :domain, domain)
   end
 
   defp extract_top_level_domain(host) do

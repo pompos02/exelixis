@@ -6,7 +6,7 @@ defmodule Core.Accounts.UserToken do
   @hash_algorithm :sha256
   @rand_size 32
 
-  @session_validity_in_hours 1
+  @session_validity_in_hours 24
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
