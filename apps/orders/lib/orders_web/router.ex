@@ -1,5 +1,6 @@
 defmodule OrdersWeb.Router do
   use OrdersWeb, :router
+  import AuthWeb.UserAuth
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -8,6 +9,7 @@ defmodule OrdersWeb.Router do
     plug :put_root_layout, html: {OrdersWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :fetch_current_user
   end
 
   pipeline :api do

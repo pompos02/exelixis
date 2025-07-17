@@ -54,28 +54,9 @@ defmodule InventoryWeb.Endpoint do
   end
 
   def session_opts() do
-    # Extract top-level domain from host for subdomain cookie sharing
-    host = InventoryWeb.Endpoint.host()
-    domain = extract_top_level_domain(host)
-    Keyword.put(@session_options, :domain, domain)
-  end
-
-  defp extract_top_level_domain(host) do
-    # For localhost development: localhost
-    # For production: extract top-level domain (e.g., example.com from tenant.example.com)
-    case host do
-      "localhost" -> "localhost"
-      _ ->
-        host
-        |> String.split(".")
-        |> case do
-          [_single] -> host  # single domain
-          parts when length(parts) >= 2 ->
-            parts
-            |> Enum.take(-2)  # Take last 2 parts (domain.tld)
-            |> Enum.join(".")
-          _ -> host
-        end
-    end
+    # Set domain to top-level domain for subdomain cookie sharing
+    # The key insight: use the top-level domain (localhost) so cookies work across subdomains
+    domain = "localhost"
+    Keyword.put(@session_options, :domain, InventoryWeb.Endpoint.host())
   end
 end

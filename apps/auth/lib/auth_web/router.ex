@@ -10,7 +10,7 @@ defmodule AuthWeb.Router do
     plug(:put_root_layout, html: {AuthWeb.Layouts, :root})
     plug(:protect_from_forgery)
     plug(:put_secure_browser_headers)
-    plug(:fetch_current_user)
+    plug :fetch_current_user
   end
 
   pipeline :api do

@@ -57,25 +57,33 @@ defmodule AuthWeb.Endpoint do
   def session_opts() do
     # Extract top-level domain from host for subdomain cookie sharing
     host = AuthWeb.Endpoint.host()
-    domain = extract_top_level_domain(host)
-    Keyword.put(@session_options, :domain, domain)
+    # domain = extract_top_level_domain(host)
+    Keyword.put(@session_options, :domain, AuthWeb.Endpoint.host())
   end
 
   defp extract_top_level_domain(host) do
     # For localhost development: localhost
     # For production: extract top-level domain (e.g., example.com from tenant.example.com)
     case host do
-      "localhost" -> "localhost"
+      "localhost" ->
+        ".localhost"
+
       _ ->
         host
         |> String.split(".")
         |> case do
-          [_single] -> host  # single domain
+          # single domain
+          [_single] ->
+            host
+
           parts when length(parts) >= 2 ->
             parts
-            |> Enum.take(-2)  # Take last 2 parts (domain.tld)
+            # Take last 2 parts (domain.tld)
+            |> Enum.take(-2)
             |> Enum.join(".")
-          _ -> host
+
+          _ ->
+            host
         end
     end
   end

@@ -1,6 +1,7 @@
 defmodule InventoryWeb.Router do
   # alias InventoryWeb.ProductIndexLive
   use InventoryWeb, :router
+  import AuthWeb.UserAuth
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -9,6 +10,7 @@ defmodule InventoryWeb.Router do
     plug :put_root_layout, html: {InventoryWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :fetch_current_user
   end
 
   pipeline :api do
