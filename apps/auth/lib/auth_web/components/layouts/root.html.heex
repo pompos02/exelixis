@@ -53,6 +53,14 @@
         </li>
       <% end %>
     </ul>
-    {@inner_content}
+    <div class="grid grid-cols-[250px_1fr] h-screen">
+      <!-- Render the shared sidebar -->
+      <SharedComponents.Layout.sidebar current_path={@conn.request_path} />
+      
+<!-- Main content area -->
+      <main class="p-8 overflow-y-auto">
+        {@inner_content}
+      </main>
+    </div>
   </body>
 </html>

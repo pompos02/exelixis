@@ -9,7 +9,8 @@ module.exports = {
   content: [
     "./js/**/*.js",
     "../lib/auth_web.ex",
-    "../lib/auth_web/**/*.*ex"
+    "../lib/auth_web/**/*.*ex",
+    "../../shared_components/lib/**/*.*ex"
   ],
   theme: {
     extend: {

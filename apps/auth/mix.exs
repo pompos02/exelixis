@@ -37,6 +37,7 @@ defmodule Auth.MixProject do
   defp deps do
     [
       {:core, in_umbrella: true},
+      {:shared_components, in_umbrella: true},
       {:bcrypt_elixir, "~> 3.0"},
       {:phoenix, "~> 1.7.21"},
       {:phoenix_ecto, "~> 4.5"},

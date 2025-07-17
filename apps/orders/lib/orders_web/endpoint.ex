@@ -1,6 +1,5 @@
 defmodule OrdersWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :orders
-
   # Base session configuration for cross-app session sharing
   @session_options [
     store: :cookie,
@@ -64,17 +63,25 @@ defmodule OrdersWeb.Endpoint do
     # For localhost development: localhost
     # For production: extract top-level domain (e.g., example.com from tenant.example.com)
     case host do
-      "localhost" -> "localhost"
+      "localhost" ->
+        "localhost"
+
       _ ->
         host
         |> String.split(".")
         |> case do
-          [_single] -> host  # single domain
+          # single domain
+          [_single] ->
+            host
+
           parts when length(parts) >= 2 ->
             parts
-            |> Enum.take(-2)  # Take last 2 parts (domain.tld)
+            # Take last 2 parts (domain.tld)
+            |> Enum.take(-2)
             |> Enum.join(".")
-          _ -> host
+
+          _ ->
+            host
         end
     end
   end

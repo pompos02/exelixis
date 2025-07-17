@@ -22,7 +22,13 @@ defmodule SharedComponents.Layout do
         Orders
       </.link>
 
-      <!-- Add other shared links here -->
+      <.link
+        href="http://auth.localhost:8000"
+        class={"text-sm font-semibold leading-6 rounded-md p-2 #{if @current_path == "/", do: "bg-slate-200 text-slate-900", else: "text-slate-700 hover:bg-slate-200"}"}
+      >
+       Login
+      </.link>
+
     </nav>
     """
   end
