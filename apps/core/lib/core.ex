@@ -15,4 +15,8 @@ defmodule Core do
   def hello do
     :world
   end
+
+  def iasonas do
+    "yiasou" <> "iasonas"
+  end
 end

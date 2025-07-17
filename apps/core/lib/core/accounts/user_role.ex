@@ -6,7 +6,7 @@ defmodule Core.Accounts.UserRole do
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
-  schema "user_roles" do
+  schema "users_roles" do
     belongs_to :user, User
     belongs_to :role, Role
 

@@ -15,6 +15,8 @@ defmodule Core.Accounts.User do
 
     belongs_to(:tenant, Core.Accounts.Tenant)
     has_many(:tokens, Core.Accounts.UserToken)
+    has_many(:user_roles, Core.Accounts.UserRole)
+    has_many(:roles, through: [:user_roles, :role])
   end
 
   def changeset(user, attrs) do

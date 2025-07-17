@@ -24,8 +24,8 @@ defmodule Core.Accounts.Role do
   """
   def changeset(role, attrs) do
     role
-    |> cast(attrs, [:name])
-    |> validate_required([:name])
+    |> cast(attrs, [:name, :tenant_id])
+    |> validate_required([:name, :tenant_id])
     |> validate_length(:name, min: 2, max: 100)
     |> unique_constraint(:name)
   end

@@ -6,7 +6,22 @@ defmodule Core.Accounts do
   import Ecto.Query, warn: false
   alias Core.Repo
 
-  alias Core.Accounts.{User, UserToken, Tenant}
+  alias Core.Accounts.{User, UserToken, Tenant, UserRole}
+  ## 
+  def assign_role_to_user(user, role) do
+    case Repo.get_by(UserRole, user_id: user.id, role_id: role.id) do
+      nil ->
+        %UserRole{}
+        |> UserRole.changeset(%{user_id: user.id, role_id: role.id})
+        |> Repo.insert()
+        |> case do
+          {:ok, _user_role} -> {:ok, user}
+          error -> error
+        end
+      _existing ->
+        {:ok, user}
+    end
+  end
 
   ## Database getters
 
@@ -161,7 +176,11 @@ defmodule Core.Accounts do
 
   """
   def change_user_registration(%User{} = user, attrs \\ %{}) do
-    User.registration_changeset(user, attrs, hash_password: false, validate_email: false, validate_name: false)
+    User.registration_changeset(user, attrs,
+      hash_password: false,
+      validate_email: false,
+      validate_name: false
+    )
   end
 
   ## Settings
@@ -233,5 +252,4 @@ defmodule Core.Accounts do
     Repo.delete_all(UserToken.by_token_and_context_query(token, "session"))
     :ok
   end
-
 end

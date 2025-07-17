@@ -4,13 +4,11 @@ defmodule Core.Accounts.RolePermission do
 
   alias Core.Accounts.{Role, Permission}
 
-  @primary_key {:id, :binary_id, autogenerate: true}
+  @primary_key false
   @foreign_key_type :binary_id
-  schema "role_permissions" do
-    belongs_to :role, Role
-    belongs_to :permission, Permission
-
-    timestamps(type: :utc_datetime)
+  schema "roles_permissions" do
+    belongs_to :role, Role, primary_key: true
+    belongs_to :permission, Permission, primary_key: true
   end
 
   @doc """

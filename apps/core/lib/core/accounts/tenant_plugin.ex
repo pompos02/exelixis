@@ -4,13 +4,11 @@ defmodule Core.Accounts.TenantPlugin do
 
   alias Core.Accounts.{Tenant, Plugin}
 
-  @primary_key {:id, :binary_id, autogenerate: true}
+  @primary_key false
   @foreign_key_type :binary_id
-  schema "tenant_plugins" do
-    belongs_to :tenant, Tenant
-    belongs_to :plugin, Plugin
-
-    timestamps(type: :utc_datetime)
+  schema "tenants_plugins" do
+    belongs_to(:tenant, Tenant)
+    belongs_to(:plugin, Plugin)
   end
 
   @doc """
@@ -25,3 +23,4 @@ defmodule Core.Accounts.TenantPlugin do
     |> unique_constraint([:tenant_id, :plugin_id])
   end
 end
+
