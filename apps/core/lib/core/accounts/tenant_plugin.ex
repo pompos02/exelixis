@@ -7,8 +7,8 @@ defmodule Core.Accounts.TenantPlugin do
   @primary_key false
   @foreign_key_type :binary_id
   schema "tenants_plugins" do
-    belongs_to(:tenant, Tenant)
-    belongs_to(:plugin, Plugin)
+    belongs_to(:tenant, Tenant, primary_key: true)
+    belongs_to(:plugin, Plugin, primary_key: true)
   end
 
   @doc """
@@ -23,4 +23,3 @@ defmodule Core.Accounts.TenantPlugin do
     |> unique_constraint([:tenant_id, :plugin_id])
   end
 end
-

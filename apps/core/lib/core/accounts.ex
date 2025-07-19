@@ -7,7 +7,41 @@ defmodule Core.Accounts do
   alias Core.Repo
 
   alias Core.Accounts.{User, UserToken, Tenant, UserRole}
-  ## 
+
+  @doc """
+  Function the returns if a specific tenant has a specific plugin true/false
+  """
+  def tenant_has_plugin?(tenant, plugin_name) do
+    tenant
+    |> Repo.preload(:plugins)
+    |> Map.get(:plugins, [])
+    |> Enum.any?(fn plugin -> plugin.name == plugin_name end)
+  end
+
+  @doc """
+  Function that checks if a specific user has access to the plugin based on tenant
+  """
+  def user_has_plugin?(user, plugin_name) do
+    case(get_tenant_by_user(user)) do
+      nil -> false
+      tenant -> tenant_has_plugin?(tenant, plugin_name)
+    end
+  end
+
+  @doc """
+  checks whether a user can acess the inventory
+  """
+  def user_can_access_inventory?(user) do
+    user_has_plugin?(user, "inventory")
+  end
+
+  @doc """
+  chjecks if a user has acess to orders
+  """
+  def user_can_access_orders?(user) do
+    user_has_plugin?(user, "orders")
+  end
+
   def assign_role_to_user(user, role) do
     case Repo.get_by(UserRole, user_id: user.id, role_id: role.id) do
       nil ->
@@ -18,6 +52,7 @@ defmodule Core.Accounts do
           {:ok, _user_role} -> {:ok, user}
           error -> error
         end
+
       _existing ->
         {:ok, user}
     end
@@ -258,6 +293,7 @@ defmodule Core.Accounts do
   """
   def get_tenant_by_user(user) when is_nil(user), do: nil
   def get_tenant_by_user(%User{tenant_id: tenant_id}) when is_nil(tenant_id), do: nil
+
   def get_tenant_by_user(%User{tenant_id: tenant_id}) do
     Repo.get(Tenant, tenant_id)
   end
