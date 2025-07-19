@@ -255,7 +255,8 @@ defmodule AuthWeb.UserAuth do
       conn
     else
       conn
-      |> put_flash(:error, "Youy dont have #{permission_name} access")
+      |> put_flash(:error, "You dont have #{permission_name} access")
+      # TODO uppdate the redirect to dashbooard once implemented
       |> redirect(external: "http://auth.exelixis.local:8000/users/log_in")
       |> halt()
     end
