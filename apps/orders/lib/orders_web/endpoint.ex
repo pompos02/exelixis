@@ -7,7 +7,6 @@ defmodule OrdersWeb.Endpoint do
     signing_salt: "shared_session_salt_2024",
     same_site: "Lax"
   ]
-
   socket "/live", Phoenix.LiveView.Socket,
     websocket: [connect_info: [session: {__MODULE__, :session_opts, []}]],
     longpoll: [connect_info: [session: {__MODULE__, :session_opts, []}]]

@@ -252,4 +252,13 @@ defmodule Core.Accounts do
     Repo.delete_all(UserToken.by_token_and_context_query(token, "session"))
     :ok
   end
+
+  @doc """
+  Gets the tenant for the given user.
+  """
+  def get_tenant_by_user(user) when is_nil(user), do: nil
+  def get_tenant_by_user(%User{tenant_id: tenant_id}) when is_nil(tenant_id), do: nil
+  def get_tenant_by_user(%User{tenant_id: tenant_id}) do
+    Repo.get(Tenant, tenant_id)
+  end
 end

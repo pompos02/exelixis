@@ -62,7 +62,6 @@ defmodule Core.Accounts.UserToken do
     {:ok, query}
   end
 
-
   @doc """
   Returns the token struct for the given token value and context.
   """

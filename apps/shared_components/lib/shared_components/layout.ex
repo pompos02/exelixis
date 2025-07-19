@@ -28,7 +28,7 @@ defmodule SharedComponents.Layout do
         <div class="mt-auto border-t p-4">
           <%= if @current_user do %>
             <div class="font-semibold"><%= @current_user.name %></div>
-            <div class="text-xs text-muted-foreground"><%= @current_user.email %></div>
+            <div class="text-xs text-muted-foreground"><%= @current_tenant && @current_tenant.name || "No Tenant" %></div>
             <div class="mt-2 flex flex-col gap-1 text-xs">
               <.link href="http://auth.exelixis.local:8000/users/settings" class="hover:underline">
                 Settings

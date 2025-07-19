@@ -93,12 +93,13 @@ defmodule AuthWeb.UserAuth do
   def fetch_current_user(conn, _opts) do
     {user_token, conn} = ensure_user_token(conn)
     user = user_token && Accounts.get_user_by_session_token(user_token)
-    
+    tenant = user && Accounts.get_tenant_by_user(user)
+
     conn =
       conn
       |> assign(:current_user, user)
-      |> assign(:current_tenant, user && user.tenant_id)
-    
+      |> assign(:current_tenant, tenant)
+
     conn
   end
 
@@ -187,10 +188,10 @@ defmodule AuthWeb.UserAuth do
           Accounts.get_user_by_session_token(user_token)
         end
       end)
-    
+
     Phoenix.Component.assign_new(socket, :current_tenant, fn ->
       if socket.assigns.current_user do
-        socket.assigns.current_user.tenant_id
+        Accounts.get_tenant_by_user(socket.assigns.current_user)
       end
     end)
   end
@@ -221,7 +222,7 @@ defmodule AuthWeb.UserAuth do
       conn
       |> put_flash(:error, "You must log in to access this page.")
       |> maybe_store_return_to()
-      |> redirect(to: ~p"/users/log_in")
+      |> redirect(external: "http://auth.exelixis.local:8000/users/log_in")
       |> halt()
     end
   end

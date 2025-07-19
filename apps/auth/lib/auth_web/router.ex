@@ -4,7 +4,7 @@ defmodule AuthWeb.Router do
   import AuthWeb.UserAuth
 
   pipeline :browser do
-    plug(:accepts, ["html"])
+    plug :accepts, ["html"]
     plug(:fetch_session)
     plug(:fetch_live_flash)
     plug(:put_root_layout, html: {AuthWeb.Layouts, :root})
@@ -48,9 +48,11 @@ defmodule AuthWeb.Router do
   ## Authentication routes
 
   scope "/", AuthWeb do
+    # this is for protection from initial page load (traditional)
     pipe_through([:browser, :redirect_if_user_is_authenticated])
 
     live_session :redirect_if_user_is_authenticated,
+      # LiveView internal navigation protection
       on_mount: [{AuthWeb.UserAuth, :redirect_if_user_is_authenticated}] do
       live("/users/register", UserRegistrationLive, :new)
       live("/users/log_in", UserLoginLive, :new)
