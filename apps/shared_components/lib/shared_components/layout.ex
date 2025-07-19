@@ -6,7 +6,12 @@ defmodule SharedComponents.Layout do
   def sidebar(assigns) do
     # Extract current app from URL
     current_app = extract_app_from_url(assigns[:current_url])
-    assigns = assign(assigns, :current_app, current_app)
+    available_plugins = get_available_plugins(assigns[:current_tenant])
+
+    assigns =
+      assigns
+      |> assign(:current_app, current_app)
+      |> assign(:available_plugins, available_plugins)
 
     ~H"""
     <div class="h-full border-r border-border bg-muted/40">
@@ -20,26 +25,9 @@ defmodule SharedComponents.Layout do
         <div class="flex-1">
           <nav class="grid items-start gap-2 p-2 text-sm font-medium lg:px-4">
             <span class="px-2 py-2 text-xs font-semibold text-muted-foreground">Plugins</span>
-            <.link 
-              href="http://inventory.exelixis.local:8000" 
-              class={[
-                "px-3 py-2 rounded-md transition-colors flex items-center gap-2",
-                if(@current_app == "inventory", 
-                   do: "bg-primary text-primary-foreground font-semibold", 
-                   else: "text-muted-foreground hover:bg-muted hover:text-foreground")
-              ]}>
-               Inventory
-            </.link>
-            <.link 
-              href="http://orders.exelixis.local:8000" 
-              class={[
-                "px-3 py-2 rounded-md transition-colors flex items-center gap-2",
-                if(@current_app == "orders", 
-                   do: "bg-primary text-primary-foreground font-semibold", 
-                   else: "text-muted-foreground hover:bg-muted hover:text-foreground")
-              ]}>
-               Orders
-            </.link>
+            <%= for plugin <- @available_plugins do %>
+              <%=render_plugin_link(plugin, @current_app)%>
+            <% end %>
           </nav>
         </div>
 
@@ -77,4 +65,44 @@ defmodule SharedComponents.Layout do
   end
 
   defp extract_app_from_url(_), do: nil
+
+  defp get_available_plugins(%{plugins: plugins}) when is_list(plugins), do: plugins
+  defp get_available_plugins(_), do: []
+
+  defp render_plugin_link(%{name: "inventory"}, current_app) do
+    assigns = %{current_app: current_app}
+
+    ~H"""
+    <.link
+      href="http://inventory.exelixis.local:8000"
+      class={[
+        "px-3 py-2 rounded-md transition-colors flex items-center gap-2",
+        if(@current_app == "inventory",
+           do: "bg-primary text-primary-foreground font-semibold",
+           else: "text-muted-foreground hover:bg-muted hover:text-foreground")
+      ]}>
+        Inventory
+    </.link>
+    """
+  end
+
+  defp render_plugin_link(%{name: "orders"}, current_app) do
+    assigns = %{current_app: current_app}
+
+    ~H"""
+    <.link
+      href="http://orders.exelixis.local:8000"
+      class={[
+        "px-3 py-2 rounded-md transition-colors flex items-center gap-2",
+        if(@current_app == "orders",
+           do: "bg-primary text-primary-foreground font-semibold",
+           else: "text-muted-foreground hover:bg-muted hover:text-foreground")
+      ]}>
+        Orders
+    </.link>
+    """
+  end
+
+  # Fallback for unknown plugins
+  defp render_plugin_link(_, _), do: nil
 end

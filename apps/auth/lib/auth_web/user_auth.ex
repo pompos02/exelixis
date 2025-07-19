@@ -8,6 +8,7 @@ defmodule AuthWeb.UserAuth do
   import Plug.Conn
   import Phoenix.Controller
 
+  alias Core.Repo
   alias Core.Accounts
 
   # Make the remember me cookie valid for 60 days.
@@ -97,7 +98,7 @@ defmodule AuthWeb.UserAuth do
   def fetch_current_user(conn, _opts) do
     {user_token, conn} = ensure_user_token(conn)
     user = user_token && Accounts.get_user_by_session_token(user_token)
-    tenant = user && Accounts.get_tenant_by_user(user)
+    tenant = user && Accounts.get_tenant_by_user(user) |> Repo.preload(:plugins)
 
     conn =
       conn
@@ -195,7 +196,7 @@ defmodule AuthWeb.UserAuth do
 
     Phoenix.Component.assign_new(socket, :current_tenant, fn ->
       if socket.assigns.current_user do
-        Accounts.get_tenant_by_user(socket.assigns.current_user)
+        Accounts.get_tenant_by_user(socket.assigns.current_user) |> Repo.preload(:plugins)
       end
     end)
   end
