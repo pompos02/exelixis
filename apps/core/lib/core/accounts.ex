@@ -29,6 +29,17 @@ defmodule Core.Accounts do
   end
 
   @doc """
+  cheks if the user has a permission based on his role
+  """
+  def user_has_permission?(user, permission_name) do
+    user
+    |> Repo.preload(roles: :permissions)
+    |> Map.get(:roles, [])
+    |> Enum.flat_map(fn role -> role.permissions end)
+    |> Enum.any?(fn permission -> permission.name == permission_name end)
+  end
+
+  @doc """
   checks whether a user can acess the inventory
   """
   def user_can_access_inventory?(user) do

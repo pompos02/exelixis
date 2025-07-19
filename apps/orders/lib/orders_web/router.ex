@@ -1,4 +1,5 @@
 defmodule OrdersWeb.Router do
+  alias Core.Accounts
   use OrdersWeb, :router
 
   import AuthWeb.UserAuth
@@ -17,12 +18,28 @@ defmodule OrdersWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :require_create_permission do
+    plug :require_permission, permission: "orders:create"
+  end
+
   scope "/", OrdersWeb do
-    pipe_through [:browser, :require_authenticated_user, :required_orders_access]
+    pipe_through [:browser, :require_authenticated_user, :require_orders_access]
 
     live_session :default, on_mount: [{AuthWeb.UserAuth, :mount_current_user}] do
       live "/", PageLive, :home
       live "/orders", OrderIndexLive, :index
+    end
+  end
+
+  scope "/", OrdersWeb do
+    pipe_through [
+      :browser,
+      :require_authenticated_user,
+      :require_orders_access,
+      :require_create_permission
+    ]
+
+    live_session :orders_create, on_mount: [{AuthWeb.UserAuth, :mount_current_user}] do
       live "/orders/new", OrderFormLive, :new
     end
   end

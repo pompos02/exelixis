@@ -18,7 +18,7 @@ defmodule InventoryWeb.Router do
   end
 
   scope "/", InventoryWeb do
-    pipe_through [:browser, :require_authenticated_user, :required_inventory_access]
+    pipe_through [:browser, :require_authenticated_user, :require_inventory_access]
 
     live_session :default,
       on_mount: [{AuthWeb.UserAuth, :mount_current_user}] do

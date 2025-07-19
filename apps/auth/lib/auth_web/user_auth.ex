@@ -216,7 +216,7 @@ defmodule AuthWeb.UserAuth do
   @doc """
   Used to ensure that the current user has access to the specified plugin
   """
-  def required_plugin_access(conn, plugin_name) do
+  def require_plugin_access(conn, plugin_name) do
     current_user = conn.assigns[:current_user]
 
     if(Accounts.user_has_plugin?(current_user, plugin_name)) do
@@ -233,15 +233,32 @@ defmodule AuthWeb.UserAuth do
   @doc """
   plug for the inventroy route
   """
-  def required_inventory_access(conn, _opts) do
-    required_plugin_access(conn, "inventory")
+  def require_inventory_access(conn, _opts) do
+    require_plugin_access(conn, "inventory")
   end
 
   @doc """
   plug for the orders access
   """
-  def required_orders_access(conn, _opts) do
-    required_plugin_access(conn, "orders")
+  def require_orders_access(conn, _opts) do
+    require_plugin_access(conn, "orders")
+  end
+
+  @doc """
+  for routes that only specific roles have acess to based on their permissions
+  """
+  def require_permission(conn, opts) do
+    permission_name = Keyword.get(opts, :permission)
+    current_user = conn.assigns[:current_user]
+
+    if(Accounts.user_has_permission?(current_user, permission_name)) do
+      conn
+    else
+      conn
+      |> put_flash(:error, "Youy dont have #{permission_name} access")
+      |> redirect(external: "http://auth.exelixis.local:8000/users/log_in")
+      |> halt()
+    end
   end
 
   @doc """
