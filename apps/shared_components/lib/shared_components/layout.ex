@@ -2,8 +2,12 @@ defmodule SharedComponents.Layout do
   use Phoenix.Component
 
   # This component will render our shared sidebar.
-  # It takes an `@current_path` assign to highlight the active link.
+  # It takes an `@current_url` assign to highlight the active application.
   def sidebar(assigns) do
+    # Extract current app from URL
+    current_app = extract_app_from_url(assigns[:current_url])
+    assigns = assign(assigns, :current_app, current_app)
+
     ~H"""
     <div class="h-full border-r border-border bg-muted/40">
       <div class="flex h-full max-h-screen flex-col">
@@ -16,11 +20,25 @@ defmodule SharedComponents.Layout do
         <div class="flex-1">
           <nav class="grid items-start gap-2 p-2 text-sm font-medium lg:px-4">
             <span class="px-2 py-2 text-xs font-semibold text-muted-foreground">Plugins</span>
-            <.link href="http://inventory.exelixis.local:8000" class="..." >
-              Inventory
+            <.link 
+              href="http://inventory.exelixis.local:8000" 
+              class={[
+                "px-3 py-2 rounded-md transition-colors flex items-center gap-2",
+                if(@current_app == "inventory", 
+                   do: "bg-primary text-primary-foreground font-semibold", 
+                   else: "text-muted-foreground hover:bg-muted hover:text-foreground")
+              ]}>
+               Inventory
             </.link>
-            <.link href="http://orders.exelixis.local:8000" class="..." >
-              Orders
+            <.link 
+              href="http://orders.exelixis.local:8000" 
+              class={[
+                "px-3 py-2 rounded-md transition-colors flex items-center gap-2",
+                if(@current_app == "orders", 
+                   do: "bg-primary text-primary-foreground font-semibold", 
+                   else: "text-muted-foreground hover:bg-muted hover:text-foreground")
+              ]}>
+               Orders
             </.link>
           </nav>
         </div>
@@ -47,4 +65,16 @@ defmodule SharedComponents.Layout do
     </div>
     """
   end
+
+  # Helper function to extract app name from URL
+  defp extract_app_from_url(url) when is_binary(url) do
+    case URI.parse(url) do
+      %{host: "inventory.exelixis.local"} -> "inventory"
+      %{host: "orders.exelixis.local"} -> "orders"
+      %{host: "auth.exelixis.local"} -> "auth"
+      _ -> nil
+    end
+  end
+
+  defp extract_app_from_url(_), do: nil
 end

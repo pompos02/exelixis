@@ -56,7 +56,7 @@
     <div class="grid grid-cols-[250px_1fr] h-screen">
       <!-- Render the shared sidebar -->
       <SharedComponents.Layout.sidebar
-        current_path={@conn.request_path}
+        current_url={Phoenix.Controller.current_url(@conn)}
         current_user={@current_user}
         current_tenant={@current_tenant}
       />
