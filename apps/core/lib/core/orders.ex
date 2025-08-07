@@ -90,7 +90,4 @@ defmodule Core.Orders do
     # Handle other potential errors, like the product not being found
     {:error, failed_value}
   end
-
-  # ... you can add update_order and delete_order functions later ...
-  # ... you can add update_order and delete_order functions later ...
 end

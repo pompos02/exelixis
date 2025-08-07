@@ -225,7 +225,7 @@ defmodule AuthWeb.UserAuth do
     else
       conn
       |> put_flash(:error, "You dont have access to this plugin")
-      # TODO make the redirection elegant to an error page??
+      # TODO: make the redirection elegant to an error page??
       |> redirect(external: "http://auth.exelixis.local:8000/users/log_in")
       |> halt()
     end
