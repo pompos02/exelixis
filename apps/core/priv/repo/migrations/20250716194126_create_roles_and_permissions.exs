@@ -7,7 +7,7 @@ defmodule Core.Repo.Migrations.CreateRolesAndPermissions do
       add :name, :string, null: false
       add :tenant_id, references(:tenants, on_delete: :delete_all, type: :binary_id), null: false
 
-      timestamps()
+      timestamps(type: :utc_datetime)
     end
 
     create index(:roles, [:tenant_id])
@@ -17,7 +17,7 @@ defmodule Core.Repo.Migrations.CreateRolesAndPermissions do
       add :id, :binary_id, primary_key: true
       add :name, :string, null: false # e.g., "orders:create", "inventory:view_stock"
 
-      timestamps()
+      timestamps(type: :utc_datetime)
     end
 
     create unique_index(:permissions, [:name])

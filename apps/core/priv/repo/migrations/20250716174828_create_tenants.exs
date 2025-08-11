@@ -5,7 +5,7 @@ defmodule Core.Repo.Migrations.CreateTenants do
     create table(:tenants, primary_key: false) do
       add :id, :binary_id, primary_key: true
       add :name, :string, null: false
-      timestamps()
+      timestamps(type: :utc_datetime)
     end
   end
 end

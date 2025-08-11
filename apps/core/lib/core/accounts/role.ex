@@ -27,7 +27,7 @@ defmodule Core.Accounts.Role do
     |> cast(attrs, [:name, :tenant_id])
     |> validate_required([:name, :tenant_id])
     |> validate_length(:name, min: 2, max: 100)
-    |> unique_constraint(:name)
+    |> unique_constraint([:tenant_id, :name])
   end
 end
 

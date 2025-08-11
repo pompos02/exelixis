@@ -10,7 +10,7 @@ defmodule Core.Repo.Migrations.CreateUsers do
       # This creates the tenant_id column and the database relationship
       add :tenant_id, references(:tenants, on_delete: :delete_all, type: :binary_id), null: false
 
-      timestamps()
+      timestamps(type: :utc_datetime)
     end
 
     create unique_index(:users, [:email])
@@ -23,7 +23,7 @@ defmodule Core.Repo.Migrations.CreateUsers do
       add :token, :binary, null: false
       add :context, :string, null: false
       add :sent_to, :string
-      timestamps(updated_at: false)
+      timestamps(type: :utc_datetime, updated_at: false)
     end
 
     create index(:users_tokens, [:user_id])

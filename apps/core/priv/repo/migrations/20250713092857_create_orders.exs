@@ -8,7 +8,7 @@ create table(:orders, primary_key: false) do
       add :customer_name, :string, null: false
       add :product_quantity, :integer, null: false
 
-      timestamps()
+      timestamps(type: :utc_datetime)
     end
 
     create index(:orders, [:product_id])
