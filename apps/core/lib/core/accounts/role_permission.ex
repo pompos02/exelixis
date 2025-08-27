@@ -7,7 +7,7 @@ defmodule Core.Accounts.RolePermission do
   @primary_key false
   @foreign_key_type :binary_id
   schema "roles_permissions" do
-    belongs_to :role, Role, primary_key: true
+      belongs_to :role, Role, primary_key: true
     belongs_to :permission, Permission, primary_key: true
   end
 
